@@ -13,7 +13,7 @@ async fn count_users(env: &worker::Env) -> worker::Result<u64> {
     let db = env.d1("demo_user_d1")?;
     Ok(db
         .prepare("SELECT count(*) FROM t_user")
-        .first::<u64>(None)
+        .first::<f64>(Some("count(*)"))
         .await?
-        .unwrap_or(0))
+        .unwrap_or(0.0) as u64)
 }

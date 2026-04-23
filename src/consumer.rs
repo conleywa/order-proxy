@@ -1,4 +1,5 @@
 use crate::service::user::User;
+use worker::wasm_bindgen::JsValue;
 use worker::{Context, Env, MessageBatch, MessageExt};
 use worker_macros::event;
 
@@ -19,8 +20,8 @@ async fn consume(message_batch: MessageBatch<User>, env: Env, _ctx: Context) -> 
             .prepare("INSERT INTO t_user (name, birthday, created_at) VALUES (?1, ?2, ?3)")
             .bind(&[
                 user.name.clone().into(),
-                user.birthday.into(),
-                user.created_at.into(),
+                JsValue::from_f64(user.birthday as f64),
+                JsValue::from_f64(user.created_at as f64),
             ])?
             .run()
             .await?;

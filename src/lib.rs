@@ -1,5 +1,4 @@
 use tracing_subscriber::fmt::format::Pretty;
-use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_web::{performance_layer, MakeConsoleWriter};
@@ -13,15 +12,17 @@ mod service;
 
 #[event(start)]
 fn start() {
+    console_error_panic_hook::set_once();
+
     let fmt_layer = tracing_subscriber::fmt::layer()
         .json()
         .with_ansi(false)
-        .with_timer(UtcTime::rfc_3339())
+        .without_time()
         .with_writer(MakeConsoleWriter);
-    let pref_layer = performance_layer().with_details_from_fields(Pretty::default());
+    let perf_layer = performance_layer().with_details_from_fields(Pretty::default());
 
-    tracing_subscriber::registry()
+    let _ = tracing_subscriber::registry()
         .with(fmt_layer)
-        .with(pref_layer)
-        .init();
+        .with(perf_layer)
+        .try_init();
 }

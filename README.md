@@ -7,8 +7,8 @@
     ```
 2. 初始化数据库
     ```bash
-    npm run cf:migrate:local
-    npm run cf:migrate:remote
+    npx wrangler d1 execute demo_user_d1 --local --file ./migrations/init.sql
+    npx wrangler d1 execute demo_user_d1 --remote --file ./migrations/init.sql
     ```
 3. 本地调试或部署
     ```bash
