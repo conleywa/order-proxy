@@ -355,19 +355,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
-name = "order-proxy"
-version = "0.1.0"
-dependencies = [
- "console_error_panic_hook",
- "serde",
- "tracing",
- "tracing-subscriber",
- "tracing-web",
- "worker",
- "worker-macros",
-]
-
-[[package]]
 name = "percent-encoding"
 version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -874,6 +861,19 @@ dependencies = [
  "web-sys",
  "worker-macros",
  "worker-sys",
+]
+
+[[package]]
+name = "worker-demo"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "serde",
+ "tracing",
+ "tracing-subscriber",
+ "tracing-web",
+ "worker",
+ "worker-macros",
 ]
 
 [[package]]
