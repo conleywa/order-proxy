@@ -1,0 +1,6 @@
+name = "order-proxy"
+main = "build/index.js"
+compatibility_date = "2026-04-22"
+
+[build]
+command = "cargo install worker-build && worker-build --release --panic-unwind"
