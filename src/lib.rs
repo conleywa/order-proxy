@@ -1,7 +1,3 @@
-use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
-use axum::Json;
-use serde::Serialize;
 use tracing_subscriber::fmt::format::Pretty;
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::layer::SubscriberExt;
@@ -11,7 +7,9 @@ use worker_macros::event;
 
 mod api;
 mod consumer;
+mod error;
 mod scheduler;
+mod service;
 
 #[event(start)]
 fn start() {
@@ -26,58 +24,4 @@ fn start() {
         .with(fmt_layer)
         .with(pref_layer)
         .init();
-}
-
-#[derive(Debug)]
-pub enum AppError {
-    NotFound,
-    BadRequest(String),
-    Unauthorized,
-    Forbidden,
-    Internal(String),
-}
-
-#[derive(Serialize)]
-pub struct Err {
-    pub msg: String,
-}
-
-impl From<worker::Error> for AppError {
-    fn from(err: worker::Error) -> Self {
-        AppError::Internal(err.to_string())
-    }
-}
-
-impl IntoResponse for AppError {
-    fn into_response(self) -> Response {
-        match self {
-            AppError::NotFound => (
-                StatusCode::NOT_FOUND,
-                Json(Err {
-                    msg: "not_found".into(),
-                }),
-            ),
-            AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, Json(Err { msg })),
-            AppError::Unauthorized => (
-                StatusCode::UNAUTHORIZED,
-                Json(Err {
-                    msg: "UNAUTHORIZED".into(),
-                }),
-            ),
-            AppError::Forbidden => (
-                StatusCode::FORBIDDEN,
-                Json(Err {
-                    msg: "FORBIDDEN".into(),
-                }),
-            ),
-            AppError::Internal(_err) => (
-                // log the err or put into a tracing span!
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(Err {
-                    msg: "INTERNAL SERVER ERROR".into(),
-                }),
-            ),
-        }
-        .into_response()
-    }
 }
